@@ -55,4 +55,3 @@ const Header = ({headers, onSorting}) => {
 export default Header;
 
 
-// ract dom manipulation class\vx function vertual dom faster react hi kyun use krna
