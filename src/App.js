@@ -34,12 +34,12 @@ function App() {
 
             <div className="row w-100">
                 <div className="col mb-3 col-12 text-center">
-                    <div className="row">
+                    <div className="row" style={{display: "flex", justifyContent: 'space-evenly'}}>
                         <div className="col-md-6">
                            
                         <PaginationPage 
-            currentPage= {currentPage}
-            setCurrentPage= {setCurrentPage}/>
+                           currentPage= {currentPage}
+                           setCurrentPage= {setCurrentPage}/>
                             {/* {[1,2,3,4].map((e) => (
                               <div onClick = {() => setCurrentPage(e)}>
                                  {e}
@@ -48,14 +48,14 @@ function App() {
                         </div>
                         <div>
                         <select value={perPage} onChange= {e => setPerPage(Number(e.target.value))}>
-              {
-                [10,15,20,50].map(perPage => (
-                  <option key={perPage} value={perPage}>
-                    Show {perPage}
-                  </option>
-                ))
-              }
-            </select>
+                           {
+                              [10,15,20,50].map(perPage => (
+                                 <option key={perPage} value={perPage}>
+                                 Show {perPage}
+                                 </option>
+                              ))
+                           }
+                           </select>
                         </div>
                            <div className="col-md-6 d-flex flex-row-reverse">
                            <Search onSearch={value =>{ setSearch(value);
