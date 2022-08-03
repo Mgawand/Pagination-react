@@ -1,82 +1,61 @@
-import React, { useState, useEffect, useMemo } from 'react';
-// import Header from './components/Header';
+import React, { useState, useEffect} from 'react';
+import Header from './components/Header';
 import PaginationPage from './components/PaginationPage';
 import {Search} from './components/Search';
 
 function App() {
    const [data, setData] = useState([]);
-   const [totalItems, setTotalItems] =useState(0);
    const [currentPage, setCurrentPage] = useState(0);
-   const perPage = 10;
+   let [perPage, setPerPage] = useState('');
    const [search, setSearch] = useState("");
    const [sorting, setSorting] = useState({ field: "", order: "" });
+   const [paginationData, setPaginationData] = useState({});
 
 
    const headers = [{name:"Id", field: "id", sortable: true},{name:"Country", field: "place_of_origin", sortable: true},{name:"Artwork title", field: "artwork_type_title", sortable: true},{name:"Department-title", field: "department_title", sortable: true}]
    useEffect(() => {
-         const fetchData = async (page, per_page) => {
       fetch(
-         // `https://jsonplaceholder.typicode.com/comments`
-         `https://api.artic.edu/api/v1/artworks?page=${page}&limit=${per_page}`
+         `https://api.artic.edu/api/v1/artworks/search?q=${search}&page=${currentPage}&limit=${perPage}`
       )
          .then((res) => res.json())
          .then(
             (result) => {
                setData(result);
+               setPaginationData(result.pagination);
                console.log(result.data);
             }).catch(() => {
                alert(`error while fetching data`)
             });
          
-   };
-   fetchData(1, perPage);
-}, [perPage])
-
-   const commentsData = useMemo(()=> {
-
-      let computedComments = data;
-
-      if(search){
-         computedComments = computedComments.filter( 
-            data => 
-            data.artwork_type_title.toLowerCase().includes(search.toLowerCase()) 
-            ||
-            data.place_of_origin.toLowerCase().includes(search.toLowerCase())
-            )         
-      }
-       setTotalItems(computedComments.length);
-
-       if (sorting.field) {
-         const reversed = sorting.order === "asc" ? 1 : -1;
-         computedComments = computedComments.sort(
-             (a, b) =>
-                 reversed * a[sorting.field].localeCompare(b[sorting.field])
-         );
-     }
-
-         const indexOfLastRecord = currentPage * perPage;
-         const indexOfFirstRecord = indexOfLastRecord - perPage;
-         const currentRecords = computedComments.slice(indexOfFirstRecord, indexOfLastRecord);
-         console.log(currentRecords)
-      return currentRecords;
- 
-      },[data, currentPage, search, sorting ])
-      
-      
-        return (
+         }, [perPage, currentPage, search])
+         return (
          <>
-            {/* <Header title="Artwork" /> */}
+               <h1>ArtWork</h1>
 
             <div className="row w-100">
                 <div className="col mb-3 col-12 text-center">
                     <div className="row">
                         <div className="col-md-6">
-                            <PaginationPage
-                              total={totalItems}
-                              itemsPerPage={perPage}
-                              currentPage={currentPage}
-                              onPageChange={page => setCurrentPage(page)}
-                            />
+                           
+                        <PaginationPage 
+            currentPage= {currentPage}
+            setCurrentPage= {setCurrentPage}/>
+                            {/* {[1,2,3,4].map((e) => (
+                              <div onClick = {() => setCurrentPage(e)}>
+                                 {e}
+                              </div>
+                            ) )} */}
+                        </div>
+                        <div>
+                        <select value={perPage} onChange= {e => setPerPage(Number(e.target.value))}>
+              {
+                [10,15,20,50].map(perPage => (
+                  <option key={perPage} value={perPage}>
+                    Show {perPage}
+                  </option>
+                ))
+              }
+            </select>
                         </div>
                            <div className="col-md-6 d-flex flex-row-reverse">
                            <Search onSearch={value =>{ setSearch(value);
@@ -86,22 +65,25 @@ function App() {
                      </div>
 
                     <table className="table table-striped">
-                    {/* <Header 
+                    <Header 
                         headers={headers}
+
                             onSorting={(field, order) =>
                                 setSorting({ field, order })
                             }
-                        /> */}
+                        />
+                        {data && data.data && data.data.length > 0 ? 
                         <tbody>
-                        {commentsData.map(item => (
+                        {data.data.map(item => (
                               <tr>
                                  <td>{item.id} </td>
-                                 <td>{item.place_of_origin} </td>
-                                 <td>{item.artwork_type_title} </td>
-                                 <td>{item.department_title} </td>
+                                 <td>{item.title} </td>
+                                 <td>{item.api_model} </td>
+                                 <td>{item.timestamp} </td>
                               </tr>
                            ))}
                         </tbody>
+                        : null}
                     </table>
                 </div>
             </div>

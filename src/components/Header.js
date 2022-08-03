@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const Header = ({headers, onSorting}) => {
    const [sortingField, setSortingField] = useState("");
@@ -15,6 +15,15 @@ const Header = ({headers, onSorting}) => {
   };
 
    return (
+
+      // <thead>
+         
+      //       <tr>
+      //       {headers.map(item => (
+      //           <th scope='col' >{item.name}</th>)) } 
+      //                       </tr>
+          
+      //   </thead>
       <thead>
             <tr>
                 {headers.map(({ name, field, sortable }) => (
@@ -34,7 +43,8 @@ const Header = ({headers, onSorting}) => {
                                         : "arrow-up"
                                 }
                             />
-                        )}
+          
+          )}
                     </th>
                 ))}
             </tr>
@@ -43,3 +53,6 @@ const Header = ({headers, onSorting}) => {
 };
 
 export default Header;
+
+
+// ract dom manipulation class\vx function vertual dom faster react hi kyun use krna
